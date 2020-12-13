@@ -7,23 +7,10 @@
     />
     <div v-if="Object.keys(value).length !== 0">
       <Chart
-        v-if="interval === 'années'"
-        :data="{ json: { ...yearlyMouseClick } }"
-        type="bar"
-      />
-      <Chart
-        v-else-if="interval === 'mois'"
-        :data="{ json: { ...monthlyMouseClick } }"
-        type="bar"
-      />
-      <Chart
-        v-else-if="interval === 'semaines'"
-        :data="{ json: { ...weeklyMouseClick } }"
-        type="bar"
-      />
-      <Chart
-        v-else-if="interval === 'jours'"
-        :data="{ json: { ...dailyMouseClick } }"
+        :data="{ json: { ...selectedData }, labels: true, order: null }"
+        :config="{
+          zoom: { enabled: true },
+        }"
         type="bar"
       />
     </div>
@@ -32,7 +19,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import { reduce } from 'lodash';
+import { forEach, forIn, keys, reduce, values } from 'lodash';
 import { Clicks, Interval } from '~/types';
 
 type ChartData = { [index: string]: number };
@@ -50,6 +37,13 @@ export default class MouseChart extends Vue {
   //   });
   //   return final;
   // }
+  get selectedData(): ChartData {
+    if (this.interval === 'années') return this.getFilteredByDate('yyyy');
+    if (this.interval === 'mois') return this.getFilteredByDate('yyyy-MM');
+    if (this.interval === 'semaines') return this.getFilteredByDate('yyyy-ww');
+    if (this.interval === 'jours') return this.getFilteredByDate('yyyy-MM-dd');
+    return {};
+  }
 
   get mouseClicks(): Clicks {
     const { LeftClick = [], RightClick = [], MiddleClick = [] } = {
@@ -58,58 +52,13 @@ export default class MouseChart extends Vue {
     return { LeftClick, RightClick, MiddleClick };
   }
 
-  get yearlyMouseClick(): ChartData {
-    // iterate over all dates
-    // take year and add 1 to result at year key
-    // return result
+  getFilteredByDate(format: string): ChartData {
     return reduce<Clicks, ChartData>(
       this.mouseClicks,
       (prev, curr) => {
         curr.forEach((v) => {
-          const year = this.$dateFns.format(new Date(v), 'yyyy');
-          prev[year] = (prev[year] || 0) + 1;
-        });
-        return prev;
-      },
-      {}
-    );
-  }
-
-  get monthlyMouseClick(): ChartData {
-    return reduce<Clicks, ChartData>(
-      this.mouseClicks,
-      (prev, curr) => {
-        curr.forEach((v) => {
-          const mounth = this.$dateFns.format(new Date(v), 'yyyy-MM');
-          prev[mounth] = (prev[mounth] || 0) + 1;
-        });
-        return prev;
-      },
-      {}
-    );
-  }
-
-  get weeklyMouseClick(): ChartData {
-    return reduce<Clicks, ChartData>(
-      this.mouseClicks,
-      (prev, curr) => {
-        curr.forEach((v) => {
-          const mounth = this.$dateFns.format(new Date(v), 'yyyy-ww');
-          prev[mounth] = (prev[mounth] || 0) + 1;
-        });
-        return prev;
-      },
-      {}
-    );
-  }
-
-  get dailyMouseClick(): ChartData {
-    return reduce<Clicks, ChartData>(
-      this.mouseClicks,
-      (prev, curr) => {
-        curr.forEach((v) => {
-          const day = this.$dateFns.format(new Date(v), 'yyyy-MM-dd');
-          prev[day] = (prev[day] || 0) + 1;
+          const _date = this.$dateFns.format(new Date(v), format);
+          prev[_date] = (prev[_date] || 0) + 1;
         });
         return prev;
       },
