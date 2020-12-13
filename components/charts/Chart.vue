@@ -4,12 +4,12 @@
 
 <script lang="ts">
 import { Component, Ref, Prop, Watch, Vue } from 'nuxt-property-decorator';
-import { generate, ChartConfiguration, ChartType, Data } from 'c3';
+import { generate, ChartConfiguration, ChartType, Data, ChartAPI } from 'c3';
 import { cloneDeep, debounce, defaultsDeep } from 'lodash';
 
 @Component
 export default class Chart extends Vue {
-  $chart: any = null;
+  chart: ChartAPI | null | undefined = null;
 
   @Ref()
   readonly root!: HTMLDivElement;
@@ -53,7 +53,7 @@ export default class Chart extends Vue {
 
   initChart(): void {
     const args = this.getArgs();
-    this.$chart = generate({
+    this.chart = generate({
       bindto: this.root,
       ...args,
     });
@@ -68,7 +68,7 @@ export default class Chart extends Vue {
     return defaultsDeep({ data }, config);
   }
 
-  getData(): Data {
+  getData(): any {
     const { type } = this;
     const data = cloneDeep(this.data);
     return defaultsDeep({ type }, data);
@@ -81,7 +81,7 @@ export default class Chart extends Vue {
 
   reload(): void {
     this.$emit('reloading');
-    this.$chart.unload();
+    // this.chart?.unload();
     this.$nextTick(() => {
       this.updateDebounce();
     });
@@ -89,7 +89,7 @@ export default class Chart extends Vue {
 
   update(): void {
     const data = this.getData();
-    this.$chart.load(data);
+    this.chart?.load({ ...data, unload: true });
     this.$emit('update', data);
   }
 
@@ -98,7 +98,7 @@ export default class Chart extends Vue {
   }
 
   beforeDestroy() {
-    this.$chart = this.$chart.destroy();
+    this.chart = this.chart?.destroy();
   }
 }
 </script>
