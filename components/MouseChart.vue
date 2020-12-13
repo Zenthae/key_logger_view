@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import { keys, reduce } from 'lodash';
+import { reduce } from 'lodash';
 import { Clicks, Interval } from '~/types';
 
 type ChartData = { [index: string]: number };

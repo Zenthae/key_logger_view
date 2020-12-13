@@ -4,9 +4,8 @@
 
 <script lang="ts">
 import { Component, Ref, Prop, Watch, Vue } from 'nuxt-property-decorator';
-import { generate, ChartAPI, ChartConfiguration, ChartType, Data } from 'c3';
+import { generate, ChartConfiguration, ChartType, Data } from 'c3';
 import { cloneDeep, debounce, defaultsDeep } from 'lodash';
-import { select } from 'd3';
 
 @Component
 export default class Chart extends Vue {
@@ -22,7 +21,7 @@ export default class Chart extends Vue {
   readonly data!: any;
 
   @Prop({ type: String, default: 'bar' })
-  readonly type!: string;
+  readonly type!: ChartType;
 
   @Prop({ type: String, default: '' })
   readonly text!: string;

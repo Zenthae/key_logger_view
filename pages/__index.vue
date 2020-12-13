@@ -100,6 +100,7 @@ export default class App extends Vue {
 
   get nbOfClick(): number[] {
     const nbClick: number[] = [];
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for (const [key, value] of Object.entries(this.nbOfClickByKeycode)) {
       nbClick.push(value);
     }
