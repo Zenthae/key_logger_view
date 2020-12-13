@@ -1,10 +1,11 @@
 <template>
   <div>
     <radio-input
-      v-for="value in values"
-      :key="value"
+      v-for="v in values"
+      :key="v"
       :name="name"
-      :value="value"
+      :value="v"
+      :selected="value === v"
       @input="updateValue($event)"
     />
   </div>

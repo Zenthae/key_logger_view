@@ -4,6 +4,7 @@
       type="radio"
       :name="name"
       :value="value"
+      :checked="selected"
       @change="updateValue($event.target)"
     />
     {{ value }}
@@ -19,6 +20,8 @@ export default class RadioInput extends Vue {
   @Prop({ type: String, required: true }) readonly name!: string;
   // value of the radio button
   @Prop({ type: String, required: true }) readonly value!: string;
+
+  @Prop({ type: Boolean }) readonly selected!: boolean;
 
   @Emit('input')
   updateValue(target: HTMLInputElement) {

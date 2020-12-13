@@ -1,8 +1,8 @@
 <template>
   <input
     type="date"
-    :value="toYYYYMMDD(value)"
     class="px-1 border border-black"
+    :value="toYYYYMMDD(value)"
     @change="updateValue($event.target)"
   />
 </template>

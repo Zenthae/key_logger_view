@@ -26,7 +26,9 @@
     "types": [
       "@types/node",
       "@nuxt/types",
-      "vue-chartjs/types",
+      "@nuxtjs/date-fns",
+      "@types/lodash",
+      "@types/c3",
     ]
   },
   "exclude": [

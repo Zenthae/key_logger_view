@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Ref, Vue } from 'nuxt-property-decorator';
+import { Component, Emit, Prop, Vue } from 'nuxt-property-decorator';
 
 @Component
 export default class fileInput extends Vue {

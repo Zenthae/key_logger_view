@@ -13,7 +13,6 @@
 </template>
 
 <script lang="ts">
-import { ChartOptions, ChartData } from 'chart.js';
 import { Component, Vue } from 'nuxt-property-decorator';
 import { Clicks } from '~/types';
 
@@ -26,7 +25,7 @@ export default class App extends Vue {
   startDate: Date = new Date();
   endDate: Date = new Date();
 
-  chartOptions: ChartOptions = {
+  chartOptions = {
     scales: { yAxes: [{ ticks: { beginAtZero: true } }] },
     responsive: true,
   };
@@ -40,7 +39,7 @@ export default class App extends Vue {
     // this.reroll();
   }
 
-  get chartData(): ChartData {
+  get chartData() {
     return {
       labels: this.filteredLabels,
       datasets: [{ label: '# of click', data: this.nbOfClick }],
