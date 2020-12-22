@@ -7,9 +7,18 @@
     />
     <div v-if="Object.keys(value).length !== 0">
       <Chart
-        :data="{ json: { ...selectedData }, labels: true, order: null }"
+        :data="{ json: { total: Object.values(selectedData) } }"
         :config="{
+          axis: {
+            x: {
+              type: 'category',
+              categories: Object.keys(selectedData),
+            },
+          },
           zoom: { enabled: true },
+          title: {
+            text: 'Boutons sourie',
+          },
         }"
         type="bar"
       />
@@ -19,7 +28,7 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import { forEach, forIn, keys, reduce, values } from 'lodash';
+import { reduce } from 'lodash';
 import { Clicks, Interval } from '~/types';
 
 type ChartData = { [index: string]: number };
@@ -30,13 +39,6 @@ export default class MouseChart extends Vue {
 
   interval: Interval = 'années';
 
-  // get mouseClicksNumber(): ChartData {
-  //   const final: ChartData = {};
-  //   keys(this.mouseClicks).map((key) => {
-  //     final[key] = this.value[key].length;
-  //   });
-  //   return final;
-  // }
   get selectedData(): ChartData {
     if (this.interval === 'années') return this.getFilteredByDate('yyyy');
     if (this.interval === 'mois') return this.getFilteredByDate('yyyy-MM');
@@ -62,7 +64,7 @@ export default class MouseChart extends Vue {
         });
         return prev;
       },
-      {}
+      {},
     );
   }
 }

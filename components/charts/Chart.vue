@@ -5,7 +5,7 @@
 <script lang="ts">
 import { Component, Ref, Prop, Watch, Vue } from 'nuxt-property-decorator';
 import { generate, ChartConfiguration, ChartType, Data, ChartAPI } from 'c3';
-import { cloneDeep, debounce, defaultsDeep } from 'lodash';
+import { cloneDeep, debounce, defaultsDeep, get } from 'lodash';
 
 @Component
 export default class Chart extends Vue {
@@ -15,41 +15,16 @@ export default class Chart extends Vue {
   readonly root!: HTMLDivElement;
 
   @Prop({ type: Object, default: () => ({}) })
-  readonly config!: any;
+  readonly config!: ChartConfiguration;
 
   @Prop({ type: Object, default: () => ({}) })
-  readonly data!: any;
+  readonly data!: Data;
 
   @Prop({ type: String, default: 'bar' })
   readonly type!: ChartType;
 
-  @Prop({ type: String, default: '' })
-  readonly text!: string;
-
-  @Watch('text', { immediate: true })
-  onTextChanged(text: string): void {
-    this.title = text;
-  }
-
   @Watch('data', { deep: true })
-  readonly reloadDebounce = debounce(() => this.reload(), 50);
-
   readonly updateDebounce = debounce(() => this.update(), 50);
-
-  get title(): string {
-    if (!this.root) return '';
-    const titleElement = this.root.querySelector('.c3-chart-arcs-title');
-
-    if (titleElement) return titleElement.innerHTML;
-    return '';
-  }
-
-  set title(val: string) {
-    if (!this.root) return;
-    const titleElement = this.root.querySelector('.c3-chart-arcs-title');
-    if (!titleElement) return;
-    titleElement.innerHTML = val;
-  }
 
   initChart(): void {
     const args = this.getArgs();
@@ -58,7 +33,6 @@ export default class Chart extends Vue {
       ...args,
     });
 
-    if (this.text) this.title = this.text;
     this.$emit('init', args);
   }
 
@@ -68,7 +42,7 @@ export default class Chart extends Vue {
     return defaultsDeep({ data }, config);
   }
 
-  getData(): any {
+  getData(): Data {
     const { type } = this;
     const data = cloneDeep(this.data);
     return defaultsDeep({ type }, data);
@@ -79,18 +53,17 @@ export default class Chart extends Vue {
     return defaultsDeep(config);
   }
 
-  reload(): void {
-    this.$emit('reloading');
-    // this.chart?.unload();
-    this.$nextTick(() => {
-      this.updateDebounce();
-    });
-  }
-
   update(): void {
     const data = this.getData();
-    this.chart?.load({ ...data, unload: true });
-    this.$emit('update', data);
+    const config = this.getConfig();
+    // TODO: look at lodash to get a function that copy values of Object
+    this.chart?.load(
+      defaultsDeep({ unload: true }, { ...data }, get(config, 'axis.x', {})),
+    );
+    this.$emit(
+      'update',
+      defaultsDeep({ unload: true }, { ...data }, get(config, 'axis.x', {})),
+    );
   }
 
   mounted() {
