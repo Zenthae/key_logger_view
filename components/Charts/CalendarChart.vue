@@ -29,7 +29,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
-import { defaults, forEach, reduce } from 'lodash';
+import defaults from 'lodash/defaults';
+import forEach from 'lodash/forEach';
+import reduce from 'lodash/reduce';
 import { DataPoint } from 'c3';
 import { Clicks } from '~/types';
 import { isBetween } from '~/helpers';

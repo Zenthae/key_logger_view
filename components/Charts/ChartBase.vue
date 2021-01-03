@@ -4,7 +4,8 @@
 
 <script lang="ts">
 import { ChartAPI, ChartType, Data, generate } from 'c3';
-import { debounce, defaultsDeep } from 'lodash';
+import defaultsDeep from 'lodash/defaultsDeep';
+import debounce from 'lodash/debounce';
 import { Component, Prop, Ref, Vue, Watch } from 'nuxt-property-decorator';
 
 @Component

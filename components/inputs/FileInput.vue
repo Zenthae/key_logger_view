@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { forEach } from 'lodash';
+import forEach from 'lodash/forEach';
 import { Component, Emit, Prop, Vue } from 'nuxt-property-decorator';
 import { Clicks } from '~/types';
 

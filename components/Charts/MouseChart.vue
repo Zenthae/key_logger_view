@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import { pick } from 'lodash';
+import pick from 'lodash/pick';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import { Clicks } from '~/types';
 

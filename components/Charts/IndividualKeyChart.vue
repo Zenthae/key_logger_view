@@ -11,7 +11,9 @@
 </template>
 
 <script lang="ts">
-import { omit, orderBy, reduce } from 'lodash';
+import omit from 'lodash/omit';
+import orderBy from 'lodash/orderBy';
+import reduce from 'lodash/reduce';
 import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import { Clicks } from '~/types';
 
