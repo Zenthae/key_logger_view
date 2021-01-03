@@ -1,5 +1,8 @@
 <template>
-  <calendar-chart :data="mouseClicks" />
+  <div class="text-center">
+    {{ $t('mouse_chart') }}
+    <calendar-chart :data="mouseClicks" />
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div class="text-center">
+    <h2>{{ $t('individual_key') }}</h2>
     <chart-base
       id="individual-key"
       :data="{ json: { ...individualKeyClicks } }"

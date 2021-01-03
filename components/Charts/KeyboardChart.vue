@@ -1,5 +1,8 @@
 <template>
-  <calendar-chart :data="keyboardClicks" />
+  <div class="text-center">
+    {{ $t('keyboard_chart') }}
+    <calendar-chart :data="keyboardClicks" />
+  </div>
 </template>
 
 <script lang="ts">

@@ -1,1 +1,17 @@
-export default {};
+export default {
+  mouse_chart: 'Mouse clicks chart (sum)',
+  keyboard_chart: 'Keyboard clicks chart (sum)',
+  individual_key: 'Individual key chart',
+  back: 'Back',
+  date_range: 'Date Range',
+  from: 'From',
+  to: 'To',
+  all_time: 'All Time',
+  today: 'Today',
+  yesterday: 'Yesterday',
+  last_week: 'Last Week',
+  last_month: 'Last Month',
+  last_year: 'Last Year',
+  choose_file: 'Choose a file',
+  total: 'Total',
+};

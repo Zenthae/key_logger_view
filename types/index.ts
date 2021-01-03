@@ -1,2 +1,2 @@
 export type Clicks = { [index: string]: Date[] };
-export type Interval = 'années' | 'mois' | 'semaines' | 'jours';
+export type Interval = { endDate: Date; startDate: Date };

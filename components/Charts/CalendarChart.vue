@@ -1,11 +1,20 @@
 <template>
   <div class="text-right">
-    <button class="" @click="goBack">
-      <svg viewBox="0 0 24 24" class="w-8 h-8">
-        <g>
-          <polygon points="17.77,3.77 16,2 6,12 16,22 17.77,20.23 9.54,12" />
-        </g>
+    <button
+      class="p-2 text-gray-700 bg-white border border-black rounded"
+      @click="goBack"
+    >
+      <svg width="24" height="24" viewBox="0 0 16 16" class="inline">
+        <path
+          d="M9 4 L5 8 L9 12"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linejoin="round"
+          stroke-linecap="round"
+        ></path>
       </svg>
+      <span class="my-1">{{ $t('back') }}</span>
     </button>
     <ChartBase
       :data="{

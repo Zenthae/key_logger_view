@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       colors: {
         orange: colors.orange,
+        inherit: 'inherit',
       },
       boxShadow: {
         DEFAULT:
@@ -17,5 +18,8 @@ module.exports = {
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    // https://github.com/tailwindlabs/tailwindcss-forms
+    require('@tailwindcss/forms'),
+  ],
 };
