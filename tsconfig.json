@@ -29,6 +29,8 @@
       "@nuxtjs/date-fns",
       "@types/lodash",
       "@types/c3",
+      "nuxt-i18n/types",
+      "@types/d3"
     ]
   },
   "exclude": [

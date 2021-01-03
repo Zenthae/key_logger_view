@@ -12,21 +12,20 @@
       :value="toHHMM(value)"
       @input="updateTime($event.target)"
     />
-    <button class="px-1 border border-black" @click="reset">Reset</button>
+    <button v-if="false" class="px-1 border border-black" @click="reset">
+      {{ $t('reset') }}
+    </button>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Emit, Prop, Vue } from 'nuxt-property-decorator';
-
 @Component
 export default class DateTimeInput extends Vue {
   // Value of the date input
   @Prop({ type: Date, default: () => new Date() }) readonly value!: Date;
-
   // Temp data, used to update date and time separately
   date: Date = this.value;
-
   updateDate(target: HTMLInputElement) {
     const newValue = target.valueAsDate;
     this.date = this.$dateFns.set(this.date, {

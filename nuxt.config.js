@@ -45,7 +45,27 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    // https://github.com/nuxt-community/i18n-module
+    'nuxt-i18n',
   ],
+
+  i18n: {
+    locales: [
+      {
+        code: 'en',
+        name: 'English',
+        file: 'en-US.ts',
+      },
+      {
+        code: 'fr',
+        name: 'Français',
+        file: 'fr-FR.ts',
+      },
+    ],
+    lazy: true,
+    langDir: 'lang/',
+    defaultLocale: 'en',
+  },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {

@@ -6,12 +6,14 @@
       :accept="fileType"
       @change="updateValue($event.target)"
     />
-    Choose a file
+    {{ $t('choose_file') }}
   </label>
 </template>
 
 <script lang="ts">
+import { forEach } from 'lodash';
 import { Component, Emit, Prop, Vue } from 'nuxt-property-decorator';
+import { Clicks } from '~/types';
 
 @Component
 export default class fileInput extends Vue {
@@ -23,7 +25,28 @@ export default class fileInput extends Vue {
   @Emit('input')
   updateValue(target: HTMLInputElement) {
     const file = target.files![0];
-    if (file) return file.text().then((content) => JSON.parse(content));
+    if (file)
+      return file.text().then((content) => {
+        const data: Clicks = JSON.parse(content);
+        const sortedKEys = Object.keys(data).sort();
+
+        const sorted = sortedKEys.reduce<Clicks>((obj, curr) => {
+          obj[curr] = data[curr].sort((a, b) => {
+            return new Date(a).getTime() - new Date(b).getTime();
+          });
+          return obj;
+        }, {});
+
+        // Transform dates in string format to date object
+        forEach(sorted, (dates) =>
+          forEach(
+            dates,
+            (date, index, collection) => (collection[index] = new Date(date)),
+          ),
+        );
+
+        return sorted;
+      });
     return this.value;
   }
 }
