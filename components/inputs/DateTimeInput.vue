@@ -26,21 +26,23 @@ export default class DateTimeInput extends Vue {
   @Prop({ type: Date, default: () => new Date() }) readonly value!: Date;
   // Temp data, used to update date and time separately
   date: Date = this.value;
+
   updateDate(target: HTMLInputElement) {
     const newValue = target.valueAsDate;
     this.date = this.$dateFns.set(this.date, {
-      year: newValue?.getFullYear(),
-      month: newValue?.getMonth(),
-      date: newValue?.getDate(),
+      year: newValue?.getUTCFullYear(),
+      month: newValue?.getUTCMonth(),
+      date: newValue?.getUTCDate(),
     });
     this.updateValue();
   }
 
   updateTime(target: HTMLInputElement) {
     const newValue = target.valueAsDate;
+
     this.date = this.$dateFns.set(this.date, {
-      hours: newValue?.getHours(),
-      minutes: newValue?.getMinutes(),
+      hours: newValue?.getUTCHours(),
+      minutes: newValue?.getUTCMinutes(),
     });
     this.updateValue();
   }
