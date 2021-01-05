@@ -1,7 +1,7 @@
 export default {
   mouse_chart: 'Graph des clicks souris (somme)',
   keyboard_chart: 'Graph des frappes clavier (somme)',
-  individual_key: 'Graph touches individuel',
+  individual_key: 'Graph touches individuel (Plage de dates)',
   back: 'Retour',
   date_range: 'Plage de dates',
   from: 'De',

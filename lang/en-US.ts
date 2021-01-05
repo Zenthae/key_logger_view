@@ -1,7 +1,7 @@
 export default {
   mouse_chart: 'Mouse clicks chart (sum)',
   keyboard_chart: 'Keyboard clicks chart (sum)',
-  individual_key: 'Individual key chart',
+  individual_key: 'Individual key chart (Date Range)',
   back: 'Back',
   date_range: 'Date Range',
   from: 'From',
