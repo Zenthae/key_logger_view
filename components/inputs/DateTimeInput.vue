@@ -19,13 +19,23 @@
 </template>
 
 <script lang="ts">
-import { Component, Emit, Prop, Vue } from 'nuxt-property-decorator';
+import { Component, Emit, Prop, Vue, Watch } from 'nuxt-property-decorator';
+
 @Component
 export default class DateTimeInput extends Vue {
   // Value of the date input
   @Prop({ type: Date, default: () => new Date() }) readonly value!: Date;
   // Temp data, used to update date and time separately
   date: Date = this.value;
+
+  /**
+   * Required to syncronize the internal date used to concate the date and the time if the value changed outside this
+   * component.
+   */
+  @Watch('value')
+  updateTempDate() {
+    this.date = this.value;
+  }
 
   updateDate(target: HTMLInputElement) {
     const newValue = target.valueAsDate;
