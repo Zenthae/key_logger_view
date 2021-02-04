@@ -11,7 +11,7 @@ import { Component, Prop, Vue } from 'nuxt-property-decorator';
 import { Clicks } from '~/types';
 
 @Component
-export default class MouseChart extends Vue {
+export default class KeyboardChart extends Vue {
   @Prop({ type: Object, default: () => ({}) })
   readonly data!: Clicks;
 
