@@ -38,52 +38,89 @@ import { isBetween } from '~/helpers';
 
 type GraphValues = {
   data?: [string | number, ...number[]];
-  categories?: (string | number)[];
+  categories?: string[];
 };
 
 type FilteredDataByDate = { [index: number]: number };
 
 @Component
-export default class MouseChart extends Vue {
+export default class CalendarChart extends Vue {
   @Prop({ type: Object, default: () => ({}) })
   readonly data!: Clicks;
 
   date: number[] = [];
 
+  /**
+   * Return the selected year
+   */
   get year(): number {
     return this.date[0];
   }
 
+  /**
+   * Return the selected mounth
+   */
   get month(): number {
     return this.date[1];
   }
 
+  /**
+   * Return the selected day
+   */
   get day(): number {
     return this.date[2];
   }
 
-  onClick(d: DataPoint) {
-    if (this.date.length >= 3) return; // return if hour already selected
-    const v = this.graphValues.categories![d.x];
-    if (this.date.length !== 1)
-      // Because months name are displayed instead of index
-      this.date.push(typeof v === 'string' ? parseInt(v) : v);
-    else this.date.push(d.x);
+  /**
+   * Return the selected hour
+   */
+  get hour(): number {
+    return this.date[3];
   }
 
+  /**
+   * Function fired when a bar is clicked.
+   *
+   */
+  onClick(d: DataPoint) {
+    // Return when the last sub array get selected
+    // return if minute already selected
+    if (this.date.length >= 4) return;
+
+    const v = this.graphValues.categories![d.x];
+
+    // When selecting a moutn, directly pushing the month index because it's displayed in "MMM" format
+    // and it start at 0 (0-11: Jan-Dec)
+    if (this.date.length === 1) this.date.push(d.x);
+    // parsing the category of the column when not selecting a month
+    else this.date.push(parseInt(v));
+  }
+
+  /**
+   * Allow the user to go back by one level.
+   *
+   * Order : _year < month < day < hour < minute_
+   */
+  goBack(): void {
+    if (this.date.length > 0) this.date.pop();
+    this.$emit('goBack', this.date);
+  }
+
+  /**
+   * Return the values displayed on the graph depending on wihch date (sub array) is selected
+   */
   get graphValues(): GraphValues {
     switch (this.date.length) {
-      case 0: // Years
+      case 0:
+        // Years
         return {
-          data: [
-            this.$t('total').toString(),
-            ...Object.values(this.yearlyData),
-          ],
+          data: [`${this.$t('total')}`, ...Object.values(this.yearlyData)],
           categories: Object.keys(this.yearlyData),
         };
-      case 1: // Months
+      case 1:
+        // Months
         return {
-          data: [this.year.toString(), ...Object.values(this.monthlyData)],
+          data: [`${this.year}`, ...Object.values(this.monthlyData)],
           categories: Object.keys(this.monthlyData).map((v) =>
             this.$dateFns.format(
               new Date(this.year, parseInt(v)), // Don't need to add 1 because the constructor of date start at 0 for months
@@ -91,7 +128,8 @@ export default class MouseChart extends Vue {
             ),
           ),
         };
-      case 2: // Days
+      case 2:
+        // Days
         return {
           data: [
             `${this.year}-${this.month + 1}`,
@@ -105,7 +143,8 @@ export default class MouseChart extends Vue {
             Object.keys(this.dailyData).length,
           ),
         };
-      case 3: // Hours
+      case 3:
+        // Hours
         return {
           data: [
             `${this.year}-${this.month + 1}-${this.day}`,
@@ -113,11 +152,24 @@ export default class MouseChart extends Vue {
           ],
           categories: Object.keys(this.hourlyData),
         };
+      case 4:
+        // Minutes
+        return {
+          data: [
+            `${this.year}-${this.month + 1}-${this.day}:${this.hour}h`,
+            ...Object.values(this.minuteData),
+          ],
+          categories: Object.keys(this.minuteData),
+        };
       default:
+        // When their is an error
         return { data: ['null'], categories: [] };
     }
   }
 
+  /**
+   * Return the data filtered by years
+   */
   get yearlyData(): FilteredDataByDate {
     return reduce<Clicks, FilteredDataByDate>(
       this.data,
@@ -132,6 +184,9 @@ export default class MouseChart extends Vue {
     );
   }
 
+  /**
+   * Return the data filtered by months (of the selected year)
+   */
   get monthlyData(): FilteredDataByDate {
     const values = reduce<Clicks, FilteredDataByDate>(
       this.data,
@@ -151,6 +206,9 @@ export default class MouseChart extends Vue {
     return defaults(values, Array(12).fill(null));
   }
 
+  /**
+   * Return the data filtered by day (of the selected month)
+   */
   get dailyData(): FilteredDataByDate {
     const values = reduce<Clicks, FilteredDataByDate>(
       this.data,
@@ -179,6 +237,9 @@ export default class MouseChart extends Vue {
     );
   }
 
+  /**
+   * Return the data filtered by hour (of the selected month)
+   */
   get hourlyData(): FilteredDataByDate {
     const values = reduce<Clicks, FilteredDataByDate>(
       this.data,
@@ -191,7 +252,7 @@ export default class MouseChart extends Vue {
             new Date(this.year, this.month, this.day),
           );
           if (isBetween(v, startOfDay, endOfDay)) {
-            const hour = this.$dateFns.getHours(v); //  days start at 1 !!!
+            const hour = this.$dateFns.getHours(v);
             prev[hour] = (prev[hour] | 0) + 1;
           }
         });
@@ -202,9 +263,36 @@ export default class MouseChart extends Vue {
     return defaults(values, Array(24).fill(null));
   }
 
-  goBack(): void {
-    if (this.date.length > 0) this.date.pop();
-    this.$emit('goBack', this.date);
+  /**
+   * Return the data filtered by minutes (of the selected hour)
+   */
+  get minuteData(): FilteredDataByDate {
+    const values = reduce<Clicks, FilteredDataByDate>(
+      this.data,
+      (prev, curr) => {
+        forEach(curr, (v) => {
+          // Start of the selected hour
+          const start = this.$dateFns.startOfHour(
+            new Date(this.year, this.month, this.day, this.hour),
+          );
+
+          // End of the selected hour
+          const end = this.$dateFns.endOfHour(
+            new Date(this.year, this.month, this.day, this.hour),
+          );
+
+          // If the current date (v) is between the selected hour (start - end)
+          // + 1 to the corresponding minute
+          if (isBetween(v, start, end)) {
+            const time = this.$dateFns.getMinutes(v);
+            prev[time] = (prev[time] | 0) + 1;
+          }
+        });
+        return prev;
+      },
+      {},
+    );
+    return defaults(values, Array(60).fill(null));
   }
 }
 </script>
