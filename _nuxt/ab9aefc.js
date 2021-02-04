@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],{189:function(e,r,o){"use strict";o.r(r),r.default={mouse_chart:"Graph des clicks souris (somme)",keyboard_chart:"Graph des frappes clavier (somme)",individual_key:"Graph touches individuel (Plage de dates)",back:"Retour",date_range:"Plage de dates",from:"De",to:"À",all_time:"Tout Le Temps",today:"Aujourd'hui",yesterday:"Hier",last_week:"Semaine Dernière",last_month:"Mois Dernier",last_year:"Année Dernière",choose_file:"Choisir un fichier",total:"Total"}}}]);
+//# sourceMappingURL=ab9aefc.js.map
